@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 public class UserCreationRequest {
     private String username;
-    @Size(min = 4 ,message = "password must be at least 4 character") //chieu dai tooi thieu cua password la 4 ki tu
+    @Size(min = 4 ,message = "INVALID_PASSWORD") //chieu dai tooi thieu cua password la 4 ki tu
     private String password;
     private String firstName;
     private String lastName;

@@ -3,6 +3,8 @@ package com.luvannie.identity_service.service;
 import com.luvannie.identity_service.dto.request.UserCreationRequest;
 import com.luvannie.identity_service.dto.request.UserUpdateRequest;
 import com.luvannie.identity_service.entity.User;
+import com.luvannie.identity_service.exception.AppException;
+import com.luvannie.identity_service.exception.ErrorCode;
 import com.luvannie.identity_service.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ public class UserService {
         User user = new User();
 
         if(userRepository.existsByUsername(request.getUsername())) {
-            throw new RuntimeException("Username already exists");
+            throw new AppException(ErrorCode.USERNAME_ALREADY_EXISTS);
         }
         user.setUsername(request.getUsername());
         user.setPassword(request.getPassword());

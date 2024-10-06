@@ -2,6 +2,7 @@ package com.luvannie.identity_service.controller;
 
 import com.luvannie.identity_service.dto.request.UserCreationRequest;
 import com.luvannie.identity_service.dto.request.UserUpdateRequest;
+import com.luvannie.identity_service.dto.response.ApiResponse;
 import com.luvannie.identity_service.entity.User;
 import com.luvannie.identity_service.service.UserService;
 import jakarta.validation.Valid;
@@ -17,30 +18,44 @@ public class UserController {
     private UserService userService;
 
     @PostMapping()
-    User createUser(@RequestBody @Valid UserCreationRequest user) {
-        return userService.createUser(user);
+    ApiResponse<User> createUser(@RequestBody @Valid UserCreationRequest user) {
+        ApiResponse<User> response = new ApiResponse<>();
+        response.setCode(200);
+       response.setResult(userService.createUser(user));
+        return response;
     }
 
     @GetMapping()
-    List<User> getUsers() {
-        return userService.getUsers();
+    ApiResponse<List<User>> getUsers() {
+        ApiResponse<List<User>> response = new ApiResponse<>();
+        response.setCode(200);
+        response.setResult(userService.getUsers());
+        return response;
     }
 
     @GetMapping("/{id}")
-    User getUserById(@PathVariable String id) {
-        return userService.getUserById(id);
+    ApiResponse<User> getUserById(@PathVariable String id) {
+        ApiResponse<User> response = new ApiResponse<>();
+        response.setCode(200);
+        response.setResult(userService.getUserById(id));
+        return response;
     }
 
     @PutMapping("{id}")
-    User updateUser(@PathVariable String id, @RequestBody UserUpdateRequest request){
-        return userService.updateUser(id, request);
-
+    ApiResponse<User> updateUser(@PathVariable String id, @RequestBody @Valid UserUpdateRequest request) {
+        ApiResponse<User> response = new ApiResponse<>();
+        response.setCode(200);
+        response.setResult(userService.updateUser(id, request));
+        return response;
     }
 
     @DeleteMapping("{id}")
-    String deleteUser(@PathVariable String id){
+    ApiResponse<Void> deleteUser(@PathVariable String id) {
         userService.deleteUser(id);
-        return "User has been deleted";
+        ApiResponse<Void> response = new ApiResponse<>();
+        response.setCode(200);
+        response.setMessage("User has been deleted");
+        return response;
     }
 
 }
