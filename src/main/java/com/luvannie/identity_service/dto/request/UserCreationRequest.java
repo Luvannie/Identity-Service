@@ -1,54 +1,23 @@
 package com.luvannie.identity_service.dto.request;
 
 import jakarta.validation.constraints.Size;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
+@Data //tao ra cac phuong thuc getter, setter, equals, hashcode, toString
+@Builder //tao ra mot builder class de tao ra mot doi tuong
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE) //xac dinh muc do truy cap cua cac truong mac dinh la private
 public class UserCreationRequest {
-    private String username;
-    @Size(min = 4 ,message = "INVALID_PASSWORD") //chieu dai tooi thieu cua password la 4 ki tu
-    private String password;
-    private String firstName;
-    private String lastName;
-    private LocalDate dateOfBirth;
+    String username;
+    @Size(min = 4, message = "INVALID_PASSWORD") //chieu dai tooi thieu cua password la 4 ki tu
+    String password;
+    String firstName;
+    String lastName;
+    LocalDate dateOfBirth;
 
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
 }

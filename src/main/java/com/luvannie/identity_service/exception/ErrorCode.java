@@ -6,6 +6,8 @@ public enum ErrorCode {
     UNCATEGORIZED(999, "Uncategorized error"),
     INVALID_PASSWORD(401, "Invalid password"),
     INVALID_KEY(401, "Invalid key"),
+    USER_NOT_EXIST(404, "User does not exist"),
+    UNAUTHENTICATED(401, "Unauthenticated")
     ;
     private int code;
     private String message;

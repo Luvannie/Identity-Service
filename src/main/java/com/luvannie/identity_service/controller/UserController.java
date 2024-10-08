@@ -3,9 +3,12 @@ package com.luvannie.identity_service.controller;
 import com.luvannie.identity_service.dto.request.UserCreationRequest;
 import com.luvannie.identity_service.dto.request.UserUpdateRequest;
 import com.luvannie.identity_service.dto.response.ApiResponse;
+import com.luvannie.identity_service.dto.response.UserResponse;
 import com.luvannie.identity_service.entity.User;
 import com.luvannie.identity_service.service.UserService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,9 +16,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
+// @Autowired not best practice, use constructor injection
+@FieldDefaults(makeFinal = true, level = lombok.AccessLevel.PRIVATE)
 public class UserController {
-    @Autowired
-    private UserService userService;
+
+    UserService userService;
 
     @PostMapping()
     ApiResponse<User> createUser(@RequestBody @Valid UserCreationRequest user) {
@@ -34,19 +40,13 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    ApiResponse<User> getUserById(@PathVariable String id) {
-        ApiResponse<User> response = new ApiResponse<>();
-        response.setCode(200);
-        response.setResult(userService.getUserById(id));
-        return response;
+    UserResponse getUserById(@PathVariable String id) {
+        return userService.getUserById(id);
     }
 
     @PutMapping("{id}")
-    ApiResponse<User> updateUser(@PathVariable String id, @RequestBody @Valid UserUpdateRequest request) {
-        ApiResponse<User> response = new ApiResponse<>();
-        response.setCode(200);
-        response.setResult(userService.updateUser(id, request));
-        return response;
+    UserResponse updateUser(@PathVariable String id, @RequestBody @Valid UserUpdateRequest user) {
+        return userService.updateUser(id, user);
     }
 
     @DeleteMapping("{id}")
