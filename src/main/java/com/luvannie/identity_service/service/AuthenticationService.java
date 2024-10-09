@@ -22,10 +22,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.StringJoiner;
 
 @Service
 @RequiredArgsConstructor
@@ -61,21 +63,21 @@ public class AuthenticationService {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
 
-        var token = generateToken(user.getUsername());
+        var token = generateToken(user);
         return AuthenticationResponse.builder()
                 .isAuthenticated(true)
                 .token(token)
                 .build();
     }
 
-    private String generateToken(String username) throws KeyLengthException {
+    private String generateToken(User user) throws KeyLengthException {
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(username)
-                .issuer("luvanie")
+                .subject(user.getUsername())
+                .issuer("luvvanie")
                 .issueTime(new Date())
                 .expirationTime(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
-                .claim("custom", "custom-value")
+                .claim("scope", buildScope(user)) //spring security tu dong map role voi scope
                 .build();
 
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
@@ -87,5 +89,14 @@ public class AuthenticationService {
         } catch (JOSEException e) {
             throw new RuntimeException("Error signing token", e);
         }
+    }
+
+    private String buildScope(User user) {
+        StringJoiner joiner = new StringJoiner(" ");
+        if (!CollectionUtils.isEmpty(user.getRoles())) {
+            user.getRoles().forEach(joiner::add);
+
+        }
+        return joiner.toString();
     }
 }

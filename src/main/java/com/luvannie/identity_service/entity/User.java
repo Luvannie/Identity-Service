@@ -1,26 +1,30 @@
 package com.luvannie.identity_service.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Getter
 @Setter
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE)
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
-    private String username;
-    private String password;
-    private String firstName;
-    private String lastName;
-    private LocalDate dateOfBirth;
+    String id;
+    String username;
+    String password;
+    String firstName;
+    String lastName;
+    LocalDate dateOfBirth;
+    @ElementCollection(fetch = FetchType.EAGER)
+    Set<String> roles;
 
 
 }
