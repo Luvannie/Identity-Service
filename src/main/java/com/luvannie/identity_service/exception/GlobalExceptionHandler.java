@@ -3,6 +3,7 @@ package com.luvannie.identity_service.exception;
 import com.luvannie.identity_service.dto.response.ApiResponse;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -34,7 +35,7 @@ public class GlobalExceptionHandler {
         ApiResponse<Void> response = new ApiResponse<>();
         response.setCode(e.getErrorCode().getCode());
         response.setMessage(e.getMessage());
-        return ResponseEntity.badRequest().body(response);
+        return ResponseEntity.status(e.getErrorCode().getStatusCode()).body(response);
     }
 
     @ExceptionHandler(value = Exception.class)
@@ -43,6 +44,14 @@ public class GlobalExceptionHandler {
         response.setCode(ErrorCode.UNCATEGORIZED.getCode());
         response.setMessage(ErrorCode.UNCATEGORIZED.getMessage());
         return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(value = AccessDeniedException.class)
+    ResponseEntity<ApiResponse<Void>> handleAccessDeniedException(@NotNull AccessDeniedException e) {
+        ApiResponse<Void> response = new ApiResponse<>();
+        response.setCode(ErrorCode.UNAUTHENTICATED.getCode());
+        response.setMessage(ErrorCode.UNAUTHENTICATED.getMessage());
+        return ResponseEntity.status(ErrorCode.UNAUTHENTICATED.getStatusCode()).body(response);
     }
 
 }
