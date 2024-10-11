@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 import java.util.Set;
+import com.luvannie.identity_service.entity.Role;
 
 @Entity
 @Getter
@@ -23,8 +24,8 @@ public class User {
     String firstName;
     String lastName;
     LocalDate dateOfBirth;
-    @ElementCollection(fetch = FetchType.EAGER)
-    Set<String> roles;
+    @ManyToMany
+    Set<Role> roles;
 
 
 }

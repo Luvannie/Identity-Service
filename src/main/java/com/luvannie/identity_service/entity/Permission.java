@@ -1,23 +1,21 @@
-package com.luvannie.identity_service.dto.response;
+package com.luvannie.identity_service.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
-public class UserResponse {
-    String id;
-    String username;
-    String firstName;
-    String lastName;
-    String dateOfBirth;
-    List<RoleResponse> roles;
+@Entity
+public class Permission {
+    @Id
+    String name;
+    String description;
 }

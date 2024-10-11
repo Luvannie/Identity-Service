@@ -8,9 +8,11 @@ import com.luvannie.identity_service.enums.Role;
 import com.luvannie.identity_service.exception.AppException;
 import com.luvannie.identity_service.exception.ErrorCode;
 import com.luvannie.identity_service.mapper.UserMapper;
+import com.luvannie.identity_service.repository.RoleRepository;
 import com.luvannie.identity_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +26,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = lombok.AccessLevel.PRIVATE)
+@Slf4j
 public class UserService {
 
     UserRepository userRepository;
@@ -31,6 +34,8 @@ public class UserService {
     UserMapper userMapper;
 
     PasswordEncoder passwordEncoder;
+
+    RoleRepository roleRepository;
 
     public User createUser(UserCreationRequest request) {
 
@@ -42,7 +47,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         HashSet<String> roles = new HashSet<>();
         roles.add(Role.USER.name());
-        user.setRoles(roles);
+//        user.setRoles(roles);
 
         return userRepository.save(user);
     }
@@ -58,7 +63,10 @@ public class UserService {
     public UserResponse updateUser(String id, UserUpdateRequest request) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         userMapper.update(user, request);
-        return userMapper.toUserResponse(userRepository.save(user));
+        var roles = roleRepository.findAllById(request.getRoles());
+        user.setRoles(new HashSet<>(roles));
+        user = userRepository.save(user);
+        return userMapper.toUserResponse(user);
     }
 
     public void deleteUser(String id) {

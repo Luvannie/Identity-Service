@@ -8,13 +8,13 @@ import com.luvannie.identity_service.entity.User;
 import com.luvannie.identity_service.exception.AppException;
 import com.luvannie.identity_service.exception.ErrorCode;
 import com.luvannie.identity_service.mapper.UserMapper;
+import com.luvannie.identity_service.repository.RoleRepository;
 import com.luvannie.identity_service.repository.UserRepository;
 import com.luvannie.identity_service.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,8 +30,8 @@ import java.util.List;
 public class UserController {
 
     UserService userService;
-    private final UserRepository userRepository;
-    UserMapper userMapper;
+
+
 
     @PostMapping()
     ApiResponse<User> createUser(@RequestBody @Valid UserCreationRequest user) {

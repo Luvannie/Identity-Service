@@ -36,7 +36,7 @@ public class ApplicationInitConfig {
                         .firstName("Anh")
                         .lastName("Nguyen")
                         .dateOfBirth(LocalDate.parse("1999-01-01"))
-                        .roles(roles)
+//                        .roles(roles)
                         .build();
                 userRepository.save(user);
                 log.warn("Admin user created");
