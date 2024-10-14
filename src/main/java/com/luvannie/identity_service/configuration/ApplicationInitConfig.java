@@ -1,7 +1,7 @@
 package com.luvannie.identity_service.configuration;
 
+import com.luvannie.identity_service.entity.Role;
 import com.luvannie.identity_service.entity.User;
-import com.luvannie.identity_service.enums.Role;
 import com.luvannie.identity_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +27,8 @@ public class ApplicationInitConfig {
     ApplicationRunner init(UserRepository userRepository) {
         return args -> {
             System.out.println("Application started");
-            var roles = new HashSet<String>();
-            roles.add(Role.ADMIN.name());
+            var roles = new HashSet<Role>();
+            roles.add(Role.builder().name("ADMIN").description("Admin role").build());
             if(userRepository.findByUsername("admin").isEmpty()){
                 User user = User.builder()
                         .username("admin")
@@ -36,7 +36,7 @@ public class ApplicationInitConfig {
                         .firstName("Anh")
                         .lastName("Nguyen")
                         .dateOfBirth(LocalDate.parse("1999-01-01"))
-//                        .roles(roles)
+                        .roles(roles)
                         .build();
                 userRepository.save(user);
                 log.warn("Admin user created");

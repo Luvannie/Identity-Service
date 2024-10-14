@@ -54,8 +54,8 @@ public class SecurityConfig {
     @Bean
     JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_"); // thay chu "SCOPE_" bang "ROLE_"
-
+        grantedAuthoritiesConverter.setAuthorityPrefix(""); // thay chu "SCOPE_" bang "ROLE_"
+        // do da chu dong gan chu "ROLE_" cho cac role trong jwt nen o day khong can them "ROLE_" nua
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
         return jwtAuthenticationConverter;

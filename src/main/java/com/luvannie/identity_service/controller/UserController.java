@@ -41,7 +41,8 @@ public class UserController {
         return response;
     }
 
-    @PreAuthorize("hasRole('ADMIN')") //spring se tao rao proxy de kiem tra quyen
+//    @PreAuthorize("hasRole('ADMIN')") //spring se tao rao proxy de kiem tra quyen
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')") // Dung  hasAuthority thi spring se tim kiem chinh xac authority la : ROLE_ADMIN
     @GetMapping()
     ApiResponse<List<User>> getUsers() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
