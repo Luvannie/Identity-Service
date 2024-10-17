@@ -1,6 +1,7 @@
 package com.luvannie.identity_service.configuration;
 
 import com.luvannie.identity_service.enums.Role;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,11 +30,16 @@ public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS = {
             "/users",
             "/auth/token",
-            "/auth/introspect"
+            "/auth/introspect",
+            "/auth/logout",
+            "/auth/refresh"
     };
 
     @Value("${jwt.secretKey}")
     String SIGNER_KEY;
+
+    @Autowired
+    CustomJwtDecoder customJwtDecoder;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -43,7 +49,7 @@ public class SecurityConfig {
 
         http.oauth2ResourceServer(oauth2->
                 oauth2.jwt(jwtConfigurer ->
-                        jwtConfigurer.decoder(jwtDecoder())
+                        jwtConfigurer.decoder(customJwtDecoder)
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter()))
                         .authenticationEntryPoint(new JwtAuthenticationEntryPoint()))
                 ; //xac thuc jwt de biet jwt hop le hay ko

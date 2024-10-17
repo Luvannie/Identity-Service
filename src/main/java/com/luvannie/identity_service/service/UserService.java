@@ -41,7 +41,7 @@ public class UserService {
 
 
         if(userRepository.existsByUsername(request.getUsername())) {
-            throw new AppException(ErrorCode.USERNAME_ALREADY_EXISTS);
+            throw new AppException(ErrorCode.USER_EXISTED);
         }
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -76,7 +76,7 @@ public class UserService {
     public UserResponse getMyInfo() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         String name = authentication.getName();
-        User user = userRepository.findByUsername(name).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXIST));
+        User user = userRepository.findByUsername(name).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         return userMapper.toUserResponse(user);
     }
 }

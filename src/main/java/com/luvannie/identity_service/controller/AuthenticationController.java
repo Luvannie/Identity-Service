@@ -2,6 +2,8 @@ package com.luvannie.identity_service.controller;
 
 import com.luvannie.identity_service.dto.request.AuthenticationRequest;
 import com.luvannie.identity_service.dto.request.IntrospectRequest;
+import com.luvannie.identity_service.dto.request.LogoutRequest;
+import com.luvannie.identity_service.dto.request.RefreshRequest;
 import com.luvannie.identity_service.dto.response.ApiResponse;
 import com.luvannie.identity_service.dto.response.AuthenticationResponse;
 import com.luvannie.identity_service.dto.response.IntrospectResponse;
@@ -42,5 +44,18 @@ public class AuthenticationController {
                 .code(200)
                 .result(res)
                 .build();
+    }
+
+    @PostMapping("/logout")
+    ApiResponse<Void> logout(@RequestBody LogoutRequest request) throws ParseException, JOSEException {
+        authenticationService.logout(request);
+        return ApiResponse.<Void>builder().build();
+    }
+
+    @PostMapping("/refresh")
+    ApiResponse<AuthenticationResponse> authenticate(@RequestBody RefreshRequest request)
+            throws ParseException, JOSEException {
+        var result = authenticationService.refreshToken(request);
+        return ApiResponse.<AuthenticationResponse>builder().result(result).build();
     }
 }

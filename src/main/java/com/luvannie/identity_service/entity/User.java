@@ -23,7 +23,7 @@ public class User {
     String password;
     String firstName;
     String lastName;
-    @DobConstraint(min = 18, message = "INVALID_DATE_OF_BIRTH")
+    @DobConstraint(min = 18, message = "INVALID_DOB")
     LocalDate dateOfBirth;
     @ManyToMany
     Set<Role> roles;
