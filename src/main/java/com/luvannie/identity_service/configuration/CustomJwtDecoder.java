@@ -17,7 +17,7 @@ import java.text.ParseException;
 import java.util.Objects;
 @Component
 public class CustomJwtDecoder implements JwtDecoder {
-    @Value("${jwt.signerKey}")
+    @Value("${jwt.secretKey}")
     private String signerKey;
 
     @Autowired

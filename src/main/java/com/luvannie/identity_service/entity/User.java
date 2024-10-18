@@ -2,6 +2,7 @@ package com.luvannie.identity_service.entity;
 
 import com.luvannie.identity_service.validator.DobConstraint;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -19,6 +20,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
+    @Size(min = 6,  message = "USERNAME_INVALID")
     String username;
     String password;
     String firstName;

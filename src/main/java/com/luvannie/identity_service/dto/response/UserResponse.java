@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -18,6 +19,6 @@ public class UserResponse {
     String username;
     String firstName;
     String lastName;
-    String dateOfBirth;
+    LocalDate dateOfBirth;
     List<RoleResponse> roles;
 }

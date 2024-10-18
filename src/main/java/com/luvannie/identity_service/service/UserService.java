@@ -1,10 +1,11 @@
 package com.luvannie.identity_service.service;
 
+import com.luvannie.identity_service.constant.PredefinedRole;
 import com.luvannie.identity_service.dto.request.UserCreationRequest;
 import com.luvannie.identity_service.dto.request.UserUpdateRequest;
 import com.luvannie.identity_service.dto.response.UserResponse;
+import com.luvannie.identity_service.entity.Role;
 import com.luvannie.identity_service.entity.User;
-import com.luvannie.identity_service.enums.Role;
 import com.luvannie.identity_service.exception.AppException;
 import com.luvannie.identity_service.exception.ErrorCode;
 import com.luvannie.identity_service.mapper.UserMapper;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.method.P;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -37,7 +39,7 @@ public class UserService {
 
     RoleRepository roleRepository;
 
-    public User createUser(UserCreationRequest request) {
+    public UserResponse createUser(UserCreationRequest request) {
 
 
         if(userRepository.existsByUsername(request.getUsername())) {
@@ -45,11 +47,17 @@ public class UserService {
         }
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        HashSet<String> roles = new HashSet<>();
-        roles.add(Role.USER.name());
-//        user.setRoles(roles);
+        HashSet<Role> roles = new HashSet<>();
+        roleRepository.findById(PredefinedRole.USER_ROLE).ifPresent(roles::add);
+        user.setRoles(roles);
 
-        return userRepository.save(user);
+        try {
+            user = userRepository.save(user);
+        } catch (DataIntegrityViolationException exception) {
+            throw new AppException(ErrorCode.USER_EXISTED);
+        }
+
+        return userMapper.toUserResponse(user);
     }
 
     public List<User> getUsers() {
