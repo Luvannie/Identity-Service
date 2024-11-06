@@ -1,22 +1,22 @@
 package com.luvannie.identity_service.mapper;
 
-import com.luvannie.identity_service.dto.request.PermissionRequest;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
 import com.luvannie.identity_service.dto.request.RoleRequest;
 import com.luvannie.identity_service.dto.response.PermissionResponse;
 import com.luvannie.identity_service.dto.response.RoleResponse;
 import com.luvannie.identity_service.entity.Permission;
 import com.luvannie.identity_service.entity.Role;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface RoleMapper {
-//    @Mapping(target = "permissions", ignore = true)
-@Mapping(target = "permissions", expression = "java(mapPermissions(role.getPermissions()))")
-RoleResponse toRoleResponse(Role role);
+    //    @Mapping(target = "permissions", ignore = true)
+    @Mapping(target = "permissions", expression = "java(mapPermissions(role.getPermissions()))")
+    RoleResponse toRoleResponse(Role role);
 
     @Mapping(target = "permissions", expression = "java(mapStringPermissions(request.getPermissions()))")
     Role toRole(RoleRequest request);
@@ -32,6 +32,4 @@ RoleResponse toRoleResponse(Role role);
                 .map(permissionName -> new Permission(permissionName, ""))
                 .collect(Collectors.toSet());
     }
-
-
 }

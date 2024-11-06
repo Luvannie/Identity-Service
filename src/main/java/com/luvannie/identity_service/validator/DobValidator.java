@@ -1,11 +1,11 @@
 package com.luvannie.identity_service.validator;
 
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
-
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
+
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class DobValidator implements ConstraintValidator<DobConstraint, LocalDate> {
     private int min;
@@ -13,7 +13,8 @@ public class DobValidator implements ConstraintValidator<DobConstraint, LocalDat
     @Override
     // khoi tao gia tri toi thieu
     public void initialize(DobConstraint constraintAnnotation) {
-        ConstraintValidator.super.initialize(constraintAnnotation); //To change body of generated methods, choose Tools | Templates.
+        ConstraintValidator.super.initialize(
+                constraintAnnotation); // To change body of generated methods, choose Tools | Templates.
         this.min = constraintAnnotation.min();
     }
 

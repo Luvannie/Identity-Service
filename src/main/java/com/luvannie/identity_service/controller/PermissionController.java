@@ -1,15 +1,17 @@
 package com.luvannie.identity_service.controller;
 
+import java.util.List;
+
+import org.springframework.web.bind.annotation.*;
+
 import com.luvannie.identity_service.dto.request.PermissionRequest;
 import com.luvannie.identity_service.dto.response.ApiResponse;
 import com.luvannie.identity_service.dto.response.PermissionResponse;
 import com.luvannie.identity_service.service.PermissionService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -39,8 +41,6 @@ public class PermissionController {
     @DeleteMapping("/{permission}")
     ApiResponse<Void> deletePermission(@PathVariable String permission) {
         permissionService.delete(permission);
-        return ApiResponse.<Void>builder()
-                .code(200)
-                .build();
+        return ApiResponse.<Void>builder().code(200).build();
     }
 }

@@ -1,11 +1,11 @@
 package com.luvannie.identity_service.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 // chuan hoa du lieu tra ve
-
 
 @Data
 @AllArgsConstructor
@@ -17,6 +17,4 @@ public class ApiResponse<T> {
     int code;
     String message;
     T result;
-
-
 }
