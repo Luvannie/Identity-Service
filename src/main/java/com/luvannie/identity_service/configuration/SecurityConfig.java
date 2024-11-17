@@ -45,8 +45,8 @@ public class SecurityConfig {
         http.authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS)
                 .permitAll()
                 .anyRequest()
-                .authenticated()); // cho phep truy cap ma ko can security
-
+                .authenticated()); // cho phep truy cap các endpoint trong public endpoints ma ko can security
+                                    // còn lại phải xác thực
         http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer
                         .decoder(customJwtDecoder)
                         .jwtAuthenticationConverter(jwtAuthenticationConverter()))
@@ -66,6 +66,8 @@ public class SecurityConfig {
     }
 
     @Bean
+    // tao jwt decoder
+    // nhưng hàm này đã bị thay thế bởi CustomJwtDecoder.java
     JwtDecoder jwtDecoder() {
         SecretKeySpec secretKeySpec = new SecretKeySpec(SIGNER_KEY.getBytes(), "HS512"); // tao secret key
         // tao jwt decoder

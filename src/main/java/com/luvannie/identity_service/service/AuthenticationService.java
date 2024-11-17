@@ -89,7 +89,8 @@ public class AuthenticationService {
     }
 
     private String generateToken(User user) throws KeyLengthException {
-        JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
+        // JWT bao gom 3 phan: header, payload, signature
+        JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512); // header cua JWT
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(user.getUsername())
                 .issuer("luvvanie")
@@ -100,19 +101,20 @@ public class AuthenticationService {
                 .jwtID(UUID.randomUUID().toString())
                 .claim("scope", buildScope(user)) // spring security tu dong map role voi scope
                 .build();
-
+        // payload cua JWT
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
 
         JWSObject jwsObject = new JWSObject(jwsHeader, payload);
         try {
             jwsObject.sign(new MACSigner(SIGNER_KEY.getBytes()));
-            return jwsObject.serialize();
+            return jwsObject.serialize();// signature cua JWT
         } catch (JOSEException e) {
             throw new RuntimeException("Error signing token", e);
         }
     }
 
     private String buildScope(User user) {
+        // build scope tu roles va permissions cua user
         StringJoiner joiner = new StringJoiner(" ");
         if (!CollectionUtils.isEmpty(user.getRoles())) {
             user.getRoles().forEach(role -> {
@@ -170,7 +172,7 @@ public class AuthenticationService {
     private SignedJWT verifyToken(String token, boolean isRefresh) throws JOSEException, ParseException {
         JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes()); // secret key
 
-        SignedJWT signedJWT = SignedJWT.parse(token); // parse token
+        SignedJWT signedJWT = SignedJWT.parse(token); // parse token bien thnh token da duoc sign
 
         Date expiryTime = (isRefresh)
                 ? new Date(signedJWT
@@ -181,13 +183,15 @@ public class AuthenticationService {
                         .toEpochMilli())
                 : signedJWT.getJWTClaimsSet().getExpirationTime();
         // xac dinh thoi gian het han cua token
+        // neu isRefresh = true thi token co the refresh trong khoang thoi gian REFRESHABLE_DURATION
+        // neu isRefresh = false thi token chi co the su dung trong khoang thoi gian VALIDITY_DURATION
         var verified = signedJWT.verify(verifier); // kiem tra token co bi thay doi hay khong
         // neu token khong hop le hoac da het han thi throw exception
         if (!(verified && expiryTime.after(new Date()))) throw new AppException(ErrorCode.UNAUTHENTICATED);
         // neu token da logout thi throw exception
         if (InvalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
             throw new AppException(ErrorCode.UNAUTHENTICATED);
-
+    // tra ve token da duoc verify
         return signedJWT;
     }
 }

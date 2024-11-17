@@ -24,6 +24,7 @@ public class User {
     String id;
 
     @Size(min = 6, message = "USERNAME_INVALID")
+    @Column(unique = true,name = "username")
     String username;
 
     String password;
